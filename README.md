@@ -1,1 +1,0 @@
-# Coinpower-app
