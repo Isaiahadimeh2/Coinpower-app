@@ -3,113 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinPower | Secure Mining</title>
+    <title>CoinPower | Official Entry</title>
+    
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+
     <style>
-        :root { --gold: #b8860b; --p-green: #28a745; --dark: #1a1a1a; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; background: #fff; color: #333; }
-        .container { max-width: 450px; margin: auto; padding: 20px; }
+        :root { --gold: #b8860b; --p-green: #28a745; --dark: #1a1a1a; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 420px; padding: 20px; box-sizing: border-box; }
+        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee; }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { color: var(--gold); margin: 0; font-size: 2rem; letter-spacing: 1px; }
+        .header p { color: #666; font-size: 0.9rem; margin: 5px 0 0; }
+        
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 1rem; transition: 0.3s; }
+        input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 5px rgba(184, 134, 11, 0.2); }
+        
+        .btn { background: var(--p-green); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1.1rem; margin-top: 15px; transition: 0.3s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        
         .hidden { display: none !important; }
-        .auth-header { text-align: center; padding: 40px 20px; }
-        .logo-large { width: 140px; height: 140px; border-radius: 50%; box-shadow: 0 8px 20px rgba(0,0,0,0.15); object-fit: cover; }
-        .dash-header { background: linear-gradient(135deg, #111 0%, #333 100%); color: white; padding: 25px; border-radius: 0 0 25px 25px; text-align: center; }
-        .logo-small { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--gold); }
-        .card { background: white; border: 1px solid #eee; border-radius: 18px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .btn { background: var(--p-green); color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        .timer-label { color: #d9534f; font-weight: bold; font-size: 0.85em; margin-top: 8px; text-align: center; }
+        .footer-link { text-align: center; font-size: 0.85rem; color: #888; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div id="auth-page">
-        <div class="auth-header">
-            <img src="3611.jpg" class="logo-large">
-            <h2 style="color: var(--gold);">DIGITAL ENERGY MINING</h2>
-        </div>
-        <div class="container">
-            <div id="reg-box" class="card">
-                <input type="text" id="reg-user" placeholder="Username">
-                <select id="reg-country">
-                    <option value="">Select Country</option>
-                    <option>Italy 🇮🇹</option><option>Canada 🇨🇦</option><option>USA 🇺🇸</option>
-                    <option>UK 🇬🇧</option><option>Ghana 🇬🇭</option><option>Nigeria 🇳🇬</option>
-                </select>
-                <input type="text" id="reg-phone" placeholder="Phone Number">
-                <input type="password" id="reg-pin" maxlength="4" placeholder="4-Digit PIN">
-                <button class="btn" onclick="register()">Join Now</button>
+
+    <div id="auth-page" class="container">
+        <div class="card">
+            <div class="header">
+                <h1>CoinPower</h1>
+                <p>Join the Future of Digital Energy</p>
             </div>
+            <h3 id="auth-title" style="margin-bottom: 15px; color: var(--dark);">Create Account</h3>
+            
+            <input type="text" id="reg-user" placeholder="Choose Username">
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="reg-fname" placeholder="First Name">
+                <input type="text" id="reg-lname" placeholder="Last Name">
+            </div>
+            
+            <select id="reg-country">
+                <option value="">Select Country</option>
+                <option>Ghana 🇬🇭</option>
+                <option>Italy 🇮🇹</option>
+                <option>Nigeria 🇳🇬</option>
+                <option>United Arab Emirates 🇦🇪</option>
+                <option>USA 🇺🇸</option>
+                <option>UK 🇬🇧</option>
+                <option>Canada 🇨🇦</option>
+                <option>Germany 🇩🇪</option>
+            </select>
+            
+            <input type="text" id="reg-phone" placeholder="Phone Number (e.g. 233...)">
+            <input type="password" id="reg-pass" placeholder="Password (4+ Digits)">
+            <input type="password" id="reg-confirm" placeholder="Confirm Password">
+            
+            <button class="btn" onclick="register()">Create Account</button>
+            <div class="footer-link" onclick="alert('Login feature coming in next update!')">Already a member? Sign In</div>
         </div>
     </div>
 
-    <div id="main-page" class="hidden">
-        <div class="dash-header">
-            <img src="3611.jpg" class="logo-small">
-            <h1 id="display-balance" style="color: #ffc107;">$0.00</h1>
-        </div>
-        <div class="container">
-            <div id="bonus-card" class="card hidden" style="border: 2px solid #ffc107; text-align: center;">
-                <h3>🎁 Bonus!</h3>
-                <button class="btn" style="background:#ffc107; color:#000;" onclick="claimSpecial()">Claim $<span id="bonus-amt-text">0</span></button>
+    <div id="dash-page" class="container hidden">
+        <div class="card" style="text-align:center;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <p style="margin:0; color:#666; font-size: 0.8rem;">Current Balance</p>
+                <h2 style="margin: 5px 0; color: var(--p-green); font-size: 2.5rem;">$1.00</h2>
             </div>
-            <div class="card" style="text-align:center;">
-                <h3>PG1 Global Unit</h3>
-                <button id="btn-claim-pg" class="btn" onclick="claimDaily()">Claim $1.00</button>
-                <div id="timer-text" class="timer-label"></div>
-            </div>
-            <button class="btn" style="background:#25D366" onclick="window.open('https://wa.me/YOURNUMBER')">💬 Support</button>
+            <h3 style="margin:0;">Welcome, <span id="user-display-name" style="color:var(--gold);">User</span>!</h3>
+            <p style="color:#666; font-size: 0.9rem;">Your account is active on the <b>PG1 Unit</b>.</p>
+            <button class="btn" style="background: var(--dark);" onclick="location.reload()">Refresh System</button>
         </div>
     </div>
 
     <script>
-        // Use your same Firebase Config here
-        const firebaseConfig = { /* PASTE YOUR CONFIG */ };
+        // --- 1. FIREBASE CONFIGURATION ---
+        // REPLACE THESE WITH YOUR ACTUAL KEYS FROM FIREBASE CONSOLE
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        let user = null;
 
+        // --- 2. REGISTRATION LOGIC ---
         async function register() {
+            // Get values and trim whitespace
+            const username = document.getElementById('reg-user').value.trim();
+            const fname = document.getElementById('reg-fname').value.trim();
+            const lname = document.getElementById('reg-lname').value.trim();
+            const country = document.getElementById('reg-country').value;
             const phone = document.getElementById('reg-phone').value.trim();
-            user = { username: document.getElementById('reg-user').value, phone: phone, country: document.getElementById('reg-country').value, pin: document.getElementById('reg-pin').value, balance: 1.0, lastClaim: 0, pendingBonus: 0 };
-            await db.collection("users").doc(phone).set(user);
-            showDashboard();
+            const pass = document.getElementById('reg-pass').value;
+            const conf = document.getElementById('reg-confirm').value;
+
+            // FIX: Logical OR (||) was missing in your original code validation
+            if(!username || !fname || !lname || !phone || !pass || !country) {
+                return alert("⚠️ Please fill in all fields!");
+            }
+            
+            if(pass.length < 4) {
+                return alert("⚠️ Password must be at least 4 characters.");
+            }
+
+            if(pass !== conf) {
+                return alert("⚠️ Passwords do not match!");
+            }
+
+            try {
+                // Check if user already exists
+                const userRef = db.collection("users").doc(phone);
+                const doc = await userRef.get();
+                
+                if (doc.exists) {
+                    return alert("❌ This phone number is already registered!");
+                }
+
+                // Create User Object
+                const userData = {
+                    username: username,
+                    firstName: fname,
+                    lastName: lname,
+                    country: country,
+                    phone: phone,
+                    password: pass, // Note: In production, use Firebase Auth for security
+                    balance: 1.0, 
+                    plan: "PG1",
+                    regDate: Date.now()
+                };
+
+                // Save to Firebase Firestore
+                await userRef.set(userData);
+                
+                alert(`✅ Welcome ${fname}! Registration Successful.`);
+                showDashboard(userData);
+
+            } catch (error) {
+                console.error("Firebase Error:", error);
+                alert("📡 Connection Error: " + error.message);
+            }
         }
 
-        async function login() {
-            /* standard login logic */
-        }
-
-        async function claimDaily() {
-            if(Date.now() - user.lastClaim < 86400000) return;
-            user.balance += 1.0; user.lastClaim = Date.now();
-            await db.collection("users").doc(user.phone).set(user); updateUI();
-        }
-
-        async function claimSpecial() {
-            user.balance += user.pendingBonus; user.pendingBonus = 0;
-            await db.collection("users").doc(user.phone).set(user); updateUI();
-        }
-
-        function showDashboard() { 
-            document.getElementById('auth-page').classList.add('hidden'); 
-            document.getElementById('main-page').classList.remove('hidden'); 
-            updateUI(); startTimer();
-        }
-
-        function updateUI() {
-            document.getElementById('display-balance').innerText = "$" + user.balance.toFixed(2);
-            if(user.pendingBonus > 0) {
-                document.getElementById('bonus-card').classList.remove('hidden');
-                document.getElementById('bonus-amt-text').innerText = user.pendingBonus;
-            } else { document.getElementById('bonus-card').classList.add('hidden'); }
-        }
-
-        function startTimer() {
-            setInterval(() => {
-                const diff = 86400000 - (Date.now() - user.lastClaim);
-                document.getElementById('timer-text').innerText = diff > 0 ? "Mining..." : "Ready!";
-                document.getElementById('btn-claim-pg').disabled = diff > 0;
-            }, 1000);
+        // --- 3. UI NAVIGATION ---
+        function showDashboard(userData) {
+            document.getElementById('auth-page').classList.add('hidden');
+            document.getElementById('dash-page').classList.remove('hidden');
+            document.getElementById('user-display-name').innerText = userData.firstName;
         }
     </script>
 </body>
