@@ -3,20 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinPower | Secure Unified Console</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
+    <title>CoinPower | Secure Mining</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     <style>
-        :root { --gold: #b8860b; --green: #28a745; --dark: #121212; --card: #ffffff; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; display: flex; justify-content: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 420px; padding: 20px; }
-        .card { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; }
+        :root { --gold: #b8860b; --p-green: #28a745; --dark: #1a1a1a; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; background: #f4f7f6; color: #333; }
+        .container { max-width: 450px; margin: auto; padding: 20px; }
+        .hidden { display: none !important; }
         
-        h2 { color: var(--gold); text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
+        /* Auth Styles */
+        .auth-header { text-align: center; padding: 40px 20px; background: #fff; }
+        .logo-large { width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-top: 10px; }
-        .btn-main { background: var(--green); color: white; }
-        .btn-gold { background
+        /* Dashboard Styles */
+        .dash-header { background: linear-gradient(135deg, #111 0%, #333 100%); color: white; padding: 30px 20px; border-radius: 0 0 30px 30px; text-align: center; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin: 15px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        
+        .btn { background: var(--p-green); color: white; border: none; padding: 16px; border-radius: 14px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1rem; transition: 0.3s; }
+        .btn:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-outline { background: transparent; border: 2px solid var(--p-green); color: var(--p-green); margin-top: 10px; }
+        
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
+        .timer-label { color: #d9534f; font-weight: bold; font-size: 0.9em; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-page">
+        <div class="auth-header">
+            <img src="3611.jpg" class="logo-large" onerror="this.src='https://via.placeholder.com/150'">
+            <h2 style="color: var(--gold); margin-top:15px;">COINPOWER ITALY 🇮🇹</h2>
+            <p style="font-size: 0.9em; color: #666;">Secure Digital Energy Mining</p>
+        </div>
+        <div class="container">
+            <div id="auth-box" class="card">
+                <input type="text" id="phone" placeholder="Phone Number (e.g. 233...)">
+                <input type="password" id="pin" maxlength="4" placeholder="4-Digit PIN">
+                
+                <div id="reg-fields" class="hidden">
+                    <input type="text" id="user" placeholder="Full Name">
+                    <select id="country">
+                        <option value="">Select Country</option>
+                        <option>Italy 🇮🇹</option><option>Canada 🇨🇦</option><option>Ghana 🇬🇭</option>
+                    </select>
+                </div>
+
+                <button id="main-btn" class="btn" onclick="handleAuth()">Login</button>
+                <button id="toggle-btn" class="btn btn-outline" onclick="toggleAuth()">New Member? Register</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-page" class="hidden">
+        <div class="dash-header">
+            <p style="margin:0; opacity:0.8;">Available Balance</p>
+            <h1 id="display-balance" style="color: #ffc107; font-size: 2.5rem; margin: 10px 0;">$0.00</h1>
+            <p id="welcome-msg" style="font-size: 0.9em;"></p>
+        </div>
+        
+        <div class="container">
+            <div class="card" style="text-align:center;">
+                <h3 style="margin-top:0;">PG1 Mining Unit</h3>
+                <p style="color: #666; font-size: 0.85em;">Daily Yield: $1.00</p>
+                <button id="btn-claim-pg" class="btn" onclick="claimDaily()">Start Mining</button>
+                <div id="timer-text" class="timer-label">Checking system...</div>
+            </div>
+
+            <div id="bonus-card" class="card hidden" style="border: 2px solid #ffc107; text-align: center; background: #fffdf0;">
+                <h3 style="margin:0;">🎁 Special Bonus</h3>
+                <p>You have a pending reward!</p>
+                <button class="btn" style="background:#ffc107; color:#000;" onclick="claimSpecial()">Claim $<span id="bonus-amt-text">0</span></button>
+            </div>
+
+            <button class="btn" style="background:#25D366; margin-top:20px;" onclick="window.open('https://t.me/coinpwer')">💬 Official Support</button>
+            <button class="btn btn-outline" style="border-color:#666; color:#666;" onclick="location.reload()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. PASTE YOUR REAL FIREBASE CONFIG HERE
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let currentUser = null;
+        let isRegistering = false;
+
+        function toggleAuth() {
+            isRegistering = !isRegistering;
+            document.getElementById('reg-fields').classList.toggle('hidden');
+            document.getElementById('main-btn').innerText = isRegistering ? "Create Account" : "Login";
+            document.getElementById('toggle-btn').innerText = isRegistering ? "Already a member? Login" : "New Member? Register";
+        }
+
+        async function handleAuth() {
+            const ph = document.getElementById('phone').value.trim();
+            const pi = document.getElementById('pin').value.trim();
+
+            if(!ph || !pi) return alert("Fill all fields");
+
+            if(isRegistering) {
+                const name = document.getElementById('user').value;
+                const ct = document.getElementById('country').value;
+                if(!name || !ct) return alert("Fill all registration fields");
+
+                // Check if user exists
+                const check = await db.collection("users").doc(ph).get();
+                if(check.exists) return alert("Phone already registered");
+
+                currentUser = { 
+                    username: name, phone: ph, country: ct, pin: pi, 
+                    balance: 1.0, lastClaim: 0, pendingBonus: 0, plan: 'PG1' 
+                };
+                await db.collection("users").doc(ph).set(currentUser);
+                showDashboard();
+            } else {
+                // LOGIN LOGIC
+                const doc = await db.collection("users").doc(ph).get();
+                if(doc.exists && doc.data().pin === pi) {
+                    currentUser = doc.data();
+                    showDashboard();
+                } else {
+                    alert("Wrong Phone or PIN");
+                }
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-page').classList.add('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
+            document.getElementById('welcome-msg').innerText = "Account: " + currentUser.username;
+            updateUI();
+            startTimer();
+        }
+
+        async function claimDaily() {
+            const now = Date.now();
+            if(now - currentUser.lastClaim < 86400000) return alert("Mining in progress...");
+
+            currentUser.balance += 1.0;
+            currentUser.lastClaim = now;
+            await db.collection("users").doc(currentUser.phone).update({
+                balance: currentUser.balance,
+                lastClaim: currentUser.lastClaim
+            });
+            updateUI();
+        }
+
+        async function claimSpecial() {
+            currentUser.balance += currentUser.pendingBonus;
+            const reward = currentUser.pendingBonus;
+            currentUser.pendingBonus = 0;
+            await db.collection("users").doc(currentUser.phone).update({
+                balance: currentUser.balance,
+                pendingBonus: 0
+            });
+            alert("Success! $" + reward + " added to balance.");
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('display-balance').innerText = "$" + currentUser.balance.toFixed(2);
+            const bonusCard = document.getElementById('bonus-card');
+            if(currentUser.pendingBonus > 0) {
+                bonusCard.classList.remove('hidden');
+                document.getElementById('bonus-amt-text').innerText = currentUser.pendingBonus;
+            } else {
+                bonusCard.classList.add('hidden');
+            }
+        }
+
+        function startTimer() {
+            setInterval(() => {
+                const diff = 86400000 - (Date.now() - (currentUser.lastClaim || 0));
+                const btn = document.getElementById('btn-claim-pg');
+                const text = document.getElementById('timer-text');
+
+                if(diff > 0) {
+                    btn.disabled = true;
+                    btn.style.background = "#ccc";
+                    const hours = Math.floor(diff / 3600000);
+                    const mins = Math.floor((diff % 3600000) / 60000);
+                    text.innerText = `Next claim in: ${hours}h ${mins}m`;
+                } else {
+                    btn.disabled = false;
+                    btn.style.background = "var(--p-green)";
+                    text.innerText = "System Ready: Start Mining";
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
