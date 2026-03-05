@@ -3,98 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinPower | Dashboard</title>
+    <title>CoinPower | Unified Platform</title>
     <style>
-        :root { --gold: #b8860b; --p-green: #28a745; --dark: #121212; --light: #f8f9fa; }
-        body { font-family: 'Inter', sans-serif; background: var(--light); margin: 0; overflow-x: hidden; }
-        
-        /* Sidebar Styling */
-        .sidebar { position: fixed; left: -250px; top: 0; width: 250px; height: 100%; background: var(--dark); color: white; transition: 0.3s; z-index: 1000; padding-top: 60px; }
-        .sidebar.active { left: 0; }
-        .sidebar a { display: block; padding: 15px 25px; color: #ccc; text-decoration: none; border-bottom: 1px solid #222; }
-        .sidebar a:hover { background: #1a1a1a; color: var(--gold); }
-        
-        /* Header & Toggle */
-        .header { background: white; padding: 15px; display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .menu-btn { font-size: 24px; cursor: pointer; margin-right: 15px; }
+        :root { --gold: #fcc419; --bg: #fdfdfd; --dark: #1a1a1a; --red: #e03131; --green: #2ecc71; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 70px; color: #333; }
+        .page { display: none; padding: 15px; max-width: 450px; margin: auto; }
+        .active { display: block; }
 
-        .container { max-width: 450px; margin: auto; padding: 20px; box-sizing: border-box; }
-        .balance-card { background: var(--dark); color: white; border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 25px; }
+        /* Shared Card Styles */
+        .card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 5px solid var(--gold); }
         
-        /* Market Grid */
-        .market-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .gen-card { background: white; border-radius: 15px; padding: 15px; border: 1px solid #eee; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.02); }
-        .gen-icon { font-size: 2rem; margin-bottom: 10px; }
-        .gen-name { font-weight: bold; font-size: 0.9rem; }
-        .gen-price { color: var(--p-green); font-weight: bold; margin: 5px 0; }
-        
-        .btn-rent { background: var(--p-green); color: white; border: none; padding: 8px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 900; }
-        .overlay.active { display: block; }
+        /* Marketplace Header (Image 5298) */
+        .wallet-header { background: var(--dark); color: white; border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 25px; }
+        .balance { font-size: 2.5rem; font-weight: bold; margin: 10px 0; }
+
+        /* Banking Notice (Image 5313) */
+        .lock-notice { background: #fff5f5; border: 1px solid #ffa8a8; border-radius: 12px; padding: 15px; display: flex; gap: 10px; color: var(--red); font-size: 0.85rem; }
+
+        /* Security Items (Image 5319) */
+        .protocol { display: flex; gap: 12px; margin-bottom: 15px; text-align: left; font-size: 0.9rem; }
+
+        /* Bottom Nav */
+        .nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #eee; padding: 10px 0; justify-content: space-around; font-size: 0.8rem; font-weight: bold; }
+        .nav-item { text-align: center; color: #888; cursor: pointer; }
+        .nav-item.active-nav { color: var(--gold); }
+
+        /* Buttons */
+        .btn-green { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-dark { background: var(--dark); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar" id="sidebar">
-        <a href="#">🏠 Dashboard</a>
-        <a href="#">⚡ Marketplace</a>
-        <a href="#">📥 Deposit</a>
-        <a href="#">📤 Withdraw</a>
-        <a href="#" onclick="location.reload()" style="color: #ff4444;">🚪 Logout</a>
+    <div id="market" class="page active">
+        <div class="wallet-header">
+            <div>Wallet Balance</div>
+            <div class="balance">$125.50</div>
+            <div style="color: var(--gold);">Welcome, Isaiah!</div>
+        </div>
+        <h3>Marketplace</h3>
+        <div class="card" style="text-align: center;">
+            <b>PG2 Unit</b>
+            <div style="color: var(--green); font-size: 1.2rem; margin: 10px 0;">$50.00</div>
+            <button class="btn-green">Rent Now</button>
+        </div>
     </div>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-    <div class="header">
-        <span class="menu-btn" onclick="toggleMenu()">☰</span>
-        <span style="font-weight:bold; color:var(--gold);">CoinPower</span>
+    <div id="withdraw" class="page">
+        <div class="card">
+            <h2 style="margin: 0 0 10px;">🏦 Banking Center</h2>
+            <div class="lock-notice">
+                <span>🚫</span>
+                <div>
+                    <b>Withdrawal Locked</b>
+                    <p style="margin: 5px 0 0;">Upgrade to <b>PG2</b> to unlock the withdrawal gateway.</p>
+                </div>
+            </div>
+            <p style="font-weight: bold; margin-top: 20px;">Select Country</p>
+            <select style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+                <option>Ghana 🇬🇭</option>
+                <option>Nigeria 🇳🇬</option>
+            </select>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="balance-card">
-            <p style="margin:0; opacity:0.7;">Total Wallet Balance</p>
-            <h1 style="font-size: 2.8rem; margin: 10px 0;">$1.00</h1>
-            <p style="background:rgba(255,255,255,0.1); display:inline-block; padding:5px 15px; border-radius:20px; font-size:0.8rem;">Active Plan: PG1</p>
+    <div id="about" class="page">
+        <div class="card">
+            <h2>Your Future in Energy Mining</h2>
+            <img src="https://images.unsplash.com/photo-1510133769068-68884a12756b?w=400" style="width: 100%; border-radius: 10px;" alt="Hero">
+            <p style="font-size: 0.9rem; line-height: 1.5; color: #666;">We are a premier global investment platform...</p>
         </div>
 
-        <div class="market-title">Mining Marketplace</div>
-        <div class="grid">
-            <div class="gen-card">
-                <div class="gen-icon">🔋</div>
-                <div class="gen-name">PG1 Unit</div>
-                <div class="gen-price">$10.00</div>
-                <button class="btn-rent" onclick="rent('PG1')">Rent</button>
-            </div>
-            <div class="gen-card">
-                <div class="gen-icon">⚡</div>
-                <div class="gen-name">PG2 Max</div>
-                <div class="gen-price">$50.00</div>
-                <button class="btn-rent" onclick="rent('PG2')">Rent</button>
-            </div>
-            <div class="gen-card">
-                <div class="gen-icon">🛡️</div>
-                <div class="gen-name">PG3 Pro</div>
-                <div class="gen-price">$200.00</div>
-                <button class="btn-rent" onclick="rent('PG3')">Rent</button>
-            </div>
-            <div class="gen-card">
-                <div class="gen-icon">💎</div>
-                <div class="gen-name">PG4 Ultra</div>
-                <div class="gen-price">$500.00</div>
-                <button class="btn-rent" onclick="rent('PG4')">Rent</button>
-            </div>
+        <div class="card" style="border-top: 5px solid var(--red);">
+            <h3 style="color: var(--gold); margin-top: 0;">Security Protocols</h3>
+            <div class="protocol"><span>✅</span> <div><b>Refund Policy</b><p>Processed for failed mining nodes.</p></div></div>
+            <div class="protocol"><span>❌</span> <div><b>Account Security</b><p>No bank removal without 2FA.</p></div></div>
+            <button class="btn-dark" onclick="alert('Accepted')">I Understand & Accept</button>
         </div>
+    </div>
+
+    <div class="nav">
+        <div class="nav-item active-nav" onclick="showPage('market', this)">🏠<br>Market</div>
+        <div class="nav-item" onclick="showPage('withdraw', this)">💳<br>Withdraw</div>
+        <div class="nav-item" onclick="showPage('about', this)">🛡️<br>Security</div>
     </div>
 
     <script>
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        function rent(plan) {
-            alert("Confirming order for " + plan + "...");
+        function showPage(pageId, navEl) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Remove active class from nav
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            navEl.classList.add('active-nav');
         }
     </script>
+
 </body>
 </html>
