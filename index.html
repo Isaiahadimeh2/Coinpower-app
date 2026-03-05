@@ -3,149 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinPower | All-in-One</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>CoinPower | Offline Test Mode</title>
     <style>
         :root { --gold: #b8860b; --p-green: #28a745; --dark: #1a1a1a; --light: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 0; }
         .container { width: 100%; max-width: 420px; margin: auto; padding: 20px; box-sizing: border-box; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        
-        /* Auth & Forms */
         h1 { color: var(--gold); text-align: center; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
         .btn { background: var(--p-green); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
-        .secondary-btn { background: var(--dark); margin-top: 5px; }
-
-        /* Dashboard & Market */
         .balance-box { background: var(--dark); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
-        .market-grid { display: grid; gap: 15px; }
-        .gen-card { background: white; border-radius: 15px; padding: 15px; border: 1px solid #eee; text-align: center; }
-        .gen-img { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
-        .price { color: var(--p-green); font-weight: bold; font-size: 1.2rem; }
-        
+        .gen-card { background: white; border-radius: 15px; padding: 15px; border: 1px solid #eee; text-align: center; margin-bottom: 15px; }
         .hidden { display: none !important; }
         .nav-link { text-align: center; font-size: 0.85rem; color: #888; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="auth-reg" class="container">
+    <div id="auth-page" class="container">
         <div class="card">
             <h1>CoinPower</h1>
-            <p style="text-align:center; color:#666;">Create Account</p>
+            <p style="text-align:center;">TEST MODE (No Database)</p>
             <input type="text" id="reg-user" placeholder="Username">
-            <input type="text" id="reg-phone" placeholder="Phone Number">
-            <input type="password" id="reg-pass" placeholder="Password (4+ digits)">
-            <button class="btn" onclick="register()">Join Now</button>
-            <div class="nav-link" onclick="toggleAuth()">Already a member? Sign In</div>
-        </div>
-    </div>
-
-    <div id="auth-login" class="container hidden">
-        <div class="card">
-            <h1>CoinPower</h1>
-            <p style="text-align:center; color:#666;">Welcome Back</p>
-            <input type="text" id="login-phone" placeholder="Phone Number">
-            <input type="password" id="login-pass" placeholder="Password">
-            <button class="btn" onclick="login()">Login</button>
-            <div class="nav-link" onclick="toggleAuth()">New here? Register</div>
+            <input type="text" id="reg-pass" placeholder="Password">
+            <button class="btn" onclick="fakeRegister()">Create Test Account</button>
         </div>
     </div>
 
     <div id="main-app" class="container hidden">
         <div class="balance-box">
-            <p style="margin:0; opacity:0.8;">Wallet Balance</p>
-            <h2 id="user-balance" style="font-size: 2.5rem; margin: 5px 0;">$0.00</h2>
+            <p style="margin:0;">Wallet Balance</p>
+            <h2 id="user-balance" style="font-size: 2.5rem; margin: 5px 0;">$1.00</h2>
             <p id="user-welcome">Welcome!</p>
         </div>
 
-        <h3>Available Power Units</h3>
-        <div id="market-grid" class="market-grid">
-            </div>
+        <h3>Marketplace</h3>
+        <div class="gen-card">
+            <div style="font-weight:bold;">PG1 Unit</div>
+            <div style="color:var(--p-green); font-weight:bold;">$10.00</div>
+            <button class="btn" style="padding:8px;" onclick="fakeRent('PG1')">Rent Now</button>
+        </div>
         
-        <button class="btn secondary-btn" onclick="location.reload()">Logout</button>
+        <button class="btn" style="background:var(--dark);" onclick="location.reload()">Reset Test</button>
     </div>
 
     <script>
-        // 1. SUPABASE CONFIGURATION
-        const SB_URL = 'YOUR_SUPABASE_URL'; 
-        const SB_KEY = 'YOUR_ANON_KEY';
-        const supabase = supabase.createClient(SB_URL, SB_KEY);
-
-        let currentUser = null;
-
-        // 2. TOGGLE UI
-        function toggleAuth() {
-            document.getElementById('auth-reg').classList.toggle('hidden');
-            document.getElementById('auth-login').classList.toggle('hidden');
-        }
-
-        // 3. REGISTER LOGIC
-        async function register() {
-            const user = document.getElementById('reg-user').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const pass = document.getElementById('reg-pass').value;
-
-            if(!user || !phone || !pass) return alert("Please fill all fields");
-
-            const { data, error } = await supabase
-                .from('profiles')
-                .insert([{ username: user, phone: phone, password: pass, balance: 1.0 }]);
-
-            if(error) return alert("Error: " + error.message);
-            alert("Success! Please Login.");
-            toggleAuth();
-        }
-
-        // 4. LOGIN LOGIC
-        async function login() {
-            const phone = document.getElementById('login-phone').value.trim();
-            const pass = document.getElementById('login-pass').value;
-
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('phone', phone)
-                .eq('password', pass)
-                .single();
-
-            if(error || !data) return alert("Invalid Phone or Password");
+        function fakeRegister() {
+            const user = document.getElementById('reg-user').value;
+            if(!user) return alert("Enter a name!");
             
-            currentUser = data;
-            loadApp();
-        }
-
-        // 5. LOAD APP & MARKET
-        async function loadApp() {
-            document.getElementById('auth-login').classList.add('hidden');
-            document.getElementById('auth-reg').classList.add('hidden');
+            // Show Success Message
+            alert("✅ SUCCESS! Account created in Test Mode.");
+            
+            // Switch Screens
+            document.getElementById('auth-page').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
-            
-            document.getElementById('user-balance').innerText = `$${currentUser.balance.toFixed(2)}`;
-            document.getElementById('user-welcome').innerText = `Welcome, ${currentUser.username}!`;
-
-            // Load Generators
-            const { data: gens, error } = await supabase.from('generators').select('*');
-            const grid = document.getElementById('market-grid');
-            grid.innerHTML = '';
-
-            gens.forEach(gen => {
-                grid.innerHTML += `
-                    <div class="gen-card">
-                        <img src="${gen.image_url || 'https://via.placeholder.com/150'}" class="gen-img">
-                        <div style="font-weight:bold;">${gen.name}</div>
-                        <div class="price">$${gen.price}</div>
-                        <p style="font-size:0.8rem; color:#666;">Income: $${gen.daily_income}/day</p>
-                        <button class="btn" style="padding:8px;" onclick="rent('${gen.id_code}', ${gen.price})">Rent Now</button>
-                    </div>
-                `;
-            });
+            document.getElementById('user-welcome').innerText = "Welcome, " + user + "!";
         }
 
-        async function rent(id, price) {
-            if(currentUser.balance < price) return alert("Insufficient Balance!");
-            alert("Renting " + id + "... (Logic connecting to user_rentals goes here)");
+        function fakeRent(name) {
+            alert("🛒 Order Placed for: " + name + "\n(In test mode, no money is actually spent)");
         }
     </script>
 </body>
