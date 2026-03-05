@@ -3,66 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinPower | Offline Test Mode</title>
+    <title>CoinPower | Dashboard</title>
     <style>
-        :root { --gold: #b8860b; --p-green: #28a745; --dark: #1a1a1a; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 0; }
-        .container { width: 100%; max-width: 420px; margin: auto; padding: 20px; box-sizing: border-box; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h1 { color: var(--gold); text-align: center; margin-bottom: 5px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        .btn { background: var(--p-green); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
-        .balance-box { background: var(--dark); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
-        .gen-card { background: white; border-radius: 15px; padding: 15px; border: 1px solid #eee; text-align: center; margin-bottom: 15px; }
-        .hidden { display: none !important; }
-        .nav-link { text-align: center; font-size: 0.85rem; color: #888; margin-top: 15px; cursor: pointer; }
+        :root { --gold: #b8860b; --p-green: #28a745; --dark: #121212; --light: #f8f9fa; }
+        body { font-family: 'Inter', sans-serif; background: var(--light); margin: 0; overflow-x: hidden; }
+        
+        /* Sidebar Styling */
+        .sidebar { position: fixed; left: -250px; top: 0; width: 250px; height: 100%; background: var(--dark); color: white; transition: 0.3s; z-index: 1000; padding-top: 60px; }
+        .sidebar.active { left: 0; }
+        .sidebar a { display: block; padding: 15px 25px; color: #ccc; text-decoration: none; border-bottom: 1px solid #222; }
+        .sidebar a:hover { background: #1a1a1a; color: var(--gold); }
+        
+        /* Header & Toggle */
+        .header { background: white; padding: 15px; display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .menu-btn { font-size: 24px; cursor: pointer; margin-right: 15px; }
+
+        .container { max-width: 450px; margin: auto; padding: 20px; box-sizing: border-box; }
+        .balance-card { background: var(--dark); color: white; border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 25px; }
+        
+        /* Market Grid */
+        .market-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .gen-card { background: white; border-radius: 15px; padding: 15px; border: 1px solid #eee; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.02); }
+        .gen-icon { font-size: 2rem; margin-bottom: 10px; }
+        .gen-name { font-weight: bold; font-size: 0.9rem; }
+        .gen-price { color: var(--p-green); font-weight: bold; margin: 5px 0; }
+        
+        .btn-rent { background: var(--p-green); color: white; border: none; padding: 8px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 900; }
+        .overlay.active { display: block; }
     </style>
 </head>
 <body>
 
-    <div id="auth-page" class="container">
-        <div class="card">
-            <h1>CoinPower</h1>
-            <p style="text-align:center;">TEST MODE (No Database)</p>
-            <input type="text" id="reg-user" placeholder="Username">
-            <input type="text" id="reg-pass" placeholder="Password">
-            <button class="btn" onclick="fakeRegister()">Create Test Account</button>
-        </div>
+    <div class="sidebar" id="sidebar">
+        <a href="#">🏠 Dashboard</a>
+        <a href="#">⚡ Marketplace</a>
+        <a href="#">📥 Deposit</a>
+        <a href="#">📤 Withdraw</a>
+        <a href="#" onclick="location.reload()" style="color: #ff4444;">🚪 Logout</a>
+    </div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="header">
+        <span class="menu-btn" onclick="toggleMenu()">☰</span>
+        <span style="font-weight:bold; color:var(--gold);">CoinPower</span>
     </div>
 
-    <div id="main-app" class="container hidden">
-        <div class="balance-box">
-            <p style="margin:0;">Wallet Balance</p>
-            <h2 id="user-balance" style="font-size: 2.5rem; margin: 5px 0;">$1.00</h2>
-            <p id="user-welcome">Welcome!</p>
+    <div class="container">
+        <div class="balance-card">
+            <p style="margin:0; opacity:0.7;">Total Wallet Balance</p>
+            <h1 style="font-size: 2.8rem; margin: 10px 0;">$1.00</h1>
+            <p style="background:rgba(255,255,255,0.1); display:inline-block; padding:5px 15px; border-radius:20px; font-size:0.8rem;">Active Plan: PG1</p>
         </div>
 
-        <h3>Marketplace</h3>
-        <div class="gen-card">
-            <div style="font-weight:bold;">PG1 Unit</div>
-            <div style="color:var(--p-green); font-weight:bold;">$10.00</div>
-            <button class="btn" style="padding:8px;" onclick="fakeRent('PG1')">Rent Now</button>
+        <div class="market-title">Mining Marketplace</div>
+        <div class="grid">
+            <div class="gen-card">
+                <div class="gen-icon">🔋</div>
+                <div class="gen-name">PG1 Unit</div>
+                <div class="gen-price">$10.00</div>
+                <button class="btn-rent" onclick="rent('PG1')">Rent</button>
+            </div>
+            <div class="gen-card">
+                <div class="gen-icon">⚡</div>
+                <div class="gen-name">PG2 Max</div>
+                <div class="gen-price">$50.00</div>
+                <button class="btn-rent" onclick="rent('PG2')">Rent</button>
+            </div>
+            <div class="gen-card">
+                <div class="gen-icon">🛡️</div>
+                <div class="gen-name">PG3 Pro</div>
+                <div class="gen-price">$200.00</div>
+                <button class="btn-rent" onclick="rent('PG3')">Rent</button>
+            </div>
+            <div class="gen-card">
+                <div class="gen-icon">💎</div>
+                <div class="gen-name">PG4 Ultra</div>
+                <div class="gen-price">$500.00</div>
+                <button class="btn-rent" onclick="rent('PG4')">Rent</button>
+            </div>
         </div>
-        
-        <button class="btn" style="background:var(--dark);" onclick="location.reload()">Reset Test</button>
     </div>
 
     <script>
-        function fakeRegister() {
-            const user = document.getElementById('reg-user').value;
-            if(!user) return alert("Enter a name!");
-            
-            // Show Success Message
-            alert("✅ SUCCESS! Account created in Test Mode.");
-            
-            // Switch Screens
-            document.getElementById('auth-page').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            document.getElementById('user-welcome').innerText = "Welcome, " + user + "!";
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
         }
 
-        function fakeRent(name) {
-            alert("🛒 Order Placed for: " + name + "\n(In test mode, no money is actually spent)");
+        function rent(plan) {
+            alert("Confirming order for " + plan + "...");
         }
     </script>
 </body>
