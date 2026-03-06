@@ -1,0 +1,21 @@
+<div id="media-room" class="page-section">
+    <h2>🎥 CoinPower Media Room</h2>
+    <p>Watch our sustainable energy mining units in real-time.</p>
+    <div class="media-grid">
+        <div class="image-frame">
+            <img src="assets/generator-pg2.jpg" alt="PG2 Solar Miner">
+            <div class="frame-label">Unit: PG2 Solar Array</div>
+        </div>
+        <div class="image-frame">
+            <img src="assets/generator-pg3.jpg" alt="PG3 Wind Miner">
+            <div class="frame-label">Unit: PG3 Wind Elite</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; }
+    .image-frame { border: 4px solid #fcc419; border-radius: 15px; overflow: hidden; background: #000; }
+    .image-frame img { width: 100%; height: auto; display: block; }
+    .frame-label { background: #fcc419; color: #000; font-weight: bold; padding: 10px; text-align: center; }
+</style>

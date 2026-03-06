@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CoinPower Admin | Manage Withdrawals</title>
+    <style>
+        :root { --gold: #fcc419; --red: #e03131; --green: #2ecc71; }
+        body { font-family: 'Inter', sans-serif; background: #f4f7f6; padding: 20px; }
+        .admin-container { max-width: 900px; margin: auto; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); padding: 25px; }
+        h1 { border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-size: 1.5rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+        th { text-align: left; background: #fafafa; padding: 15px; border-bottom: 2px solid #eee; }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+        
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
+        .badge-pending { background: #fff5e6; color: #f39c12; }
+        
+        .btn-approve { background: var(--green); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-right: 5px; }
+        .btn-reject { background: var(--red); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+        
+        .fee-text { color: var(--red); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <h1>Pending Withdrawals (Verification Queue)</h1>
+    <p style="color: #666; font-size: 0.85rem;">Verify details and process within the <b>1 to 24 hour</b> window.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Request Amount</th>
+                <th>15% Fee</th>
+                <th>Net to Send</th>
+                <th>Details</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="adminTableBody">
+            <tr>
+                <td>USR-9921</td>
+                <td><b>$100.00</b></td>
+                <td class="fee-text">-$15.00</td>
+                <td style="color: var(--green); font-weight: bold;">$85.00</td>
+                <td>MTN MoMo: 024XXXXXX</td>
+                <td>
+                    <button class="btn-approve" onclick="approve(this)">Approve</button>
+                    <button class="btn-reject" onclick="reject(this)">Ban User</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    async function approve(btn) {
+        if(confirm("Confirm: Have you manually sent the net amount to the user?")) {
+            // Update Supabase status to 'completed'
+            btn.parentElement.parentElement.style.opacity = '0.3';
+            btn.innerText = "Processed";
+            btn.disabled = true;
+        }
+    }
+
+    function reject(btn) {
+        if(confirm("Strict Security Protocol: Ban user for suspected multiple accounts?")) {
+            // Logic to ban user in auth.users
+            btn.parentElement.parentElement.remove();
+        }
+    }
+</script>
+
+</body>
+</html>
