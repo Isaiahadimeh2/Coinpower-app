@@ -1,7 +1,0 @@
-<script>
-  const adminPass = prompt("Enter Admin Password:");
-  if (adminPass !== "YOUR_SECRET_PASSWORD") {
-    alert("Access Denied");
-    window.location.href = "../index.html"; // Sends intruders back to the home page
-  }
-</script>
