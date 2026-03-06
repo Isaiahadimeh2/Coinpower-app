@@ -1,6 +1,6 @@
 // 1. Setup Connection
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = 'YOUR_SUPABASE_URL';https://xbztonzjtkkcqrrfpyyt.supabase.co
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';sb_publishable_LtzRamPjeCgDy7CBbHFmdg_fFoQHyEv
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function fetchUserMiners() {
