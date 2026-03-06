@@ -2,26 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coinpower App</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div id="active-page" class="page-section">
-        <div class="page-header">
-            <h2>⚡ Your Active Miners</h2>
-            <p>Real-time energy production status.</p>
+    <div class="container">
+        <div id="active-page" class="page-section">
+            <div class="page-header">
+                <h2>⚡ Your Active Miners</h2>
+                <p>Real-time energy production status.</p>
+            </div>
+            <div id="miners-container">
+                </div>
         </div>
 
-        <div id="miners-container">
-            <p>Loading your miners...</p>
+        <div class="page-section mt-8">
+            <div class="page-header">
+                <h2>💰 Transaction History</h2>
+                <p>Recent earnings and activity.</p>
+            </div>
+            <div id="transactions-container" class="history-list">
+                </div>
         </div>
 
-        <div class="account-section">
-            <button id="logout-btn">Sign Out</button>
-        </div>
+        <button onclick="signOut()" class="logout-btn">Sign Out</button>
     </div>
 
-    <script src="app.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
