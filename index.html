@@ -1,22 +1,27 @@
-<div id="active-page" class="page-section">
-    <div class="page-header">
-        <h2>⚡ Your Active Miners</h2>
-        <p>Real-time energy production status.</p>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coinpower App</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="active-page" class="page-section">
+        <div class="page-header">
+            <h2>⚡ Your Active Miners</h2>
+            <p>Real-time energy production status.</p>
+        </div>
 
-    <div id="miners-container">
-        <div class="miner-card">
-            <div class="miner-info">
-                <span class="miner-name">PG2 - Solar Array</span>
-                <span class="miner-status">Status: Running</span>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar" id="p1" style="width: 65%;"></div>
-            </div>
-            <div class="miner-stats">
-                <span>Daily: $2.40</span>
-                <span id="timer-1">Time Left: 14h 22m</span>
-            </div>
+        <div id="miners-container">
+            <p>Loading your miners...</p>
+        </div>
+
+        <div class="account-section">
+            <button id="logout-btn">Sign Out</button>
         </div>
     </div>
-</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
