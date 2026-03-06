@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CoinPower | Deposit</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --gold: #D4AF37; --green: #28a745; --white: #FFFFFF; }
+        body { font-family: sans-serif; background: #f9f9f9; padding: 20px; text-align: center; }
+        .momo-card { background: var(--white); border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .momo-number { font-size: 22px; font-weight: bold; color: var(--green); letter-spacing: 1px; }
+        .input-group { margin: 15px 0; text-align: left; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .submit-btn { background: var(--green); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2 style="color: var(--gold);">DEPOSIT FUNDS</h2>
+    
+    <div class="momo-card">
+        <p style="margin: 0; color: #555;">Send MoMo Payment to:</p>
+        <p class="momo-number">+233257758007</p>
+        <p style="font-size: 14px; color: #888;">Name: James Cole</p>
+    </div>
+
+    <div style="background: white; padding: 20px; border-radius: 15px; border: 1px solid #ddd;">
+        <div class="input-group">
+            <label>Amount Sent ($):</label>
+            <input type="number" id="dep-amount" placeholder="e.g. 10">
+        </div>
+        <div class="input-group">
+            <label>Transaction ID / Reference:</label>
+            <input type="text" id="dep-ref" placeholder="Enter MoMo ID">
+        </div>
+        <button class="submit-btn" onclick="submitDeposit()">I HAVE PAID</button>
+    </div>
+
+    <script>
+        // Use your keys here
+        const supabase = supabase.createClient('YOUR_URL', 'YOUR_KEY');
+
+        async function submitDeposit() {
+            const amount = document.getElementById('dep-amount').value;
+            const ref = document.getElementById('dep-ref').value;
+            const phone = localStorage.getItem('userPhone');
+
+            if(!amount || !ref) return alert("Please fill all fields");
+
+            const { error } = await supabase
+                .from('deposits') // We will create this table next
+                .insert([{ 
+                    phone_number: phone, 
+                    amount: amount, 
+                    reference: ref, 
+                    status: 'pending' 
+                }]);
+
+            if (!error) {
+                alert("Deposit Submitted! Wait for Admin approval.");
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Error submitting deposit.");
+            }
+        }
+    </script>
+</body>
+</html>
