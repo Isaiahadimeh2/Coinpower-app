@@ -1,0 +1,42 @@
+<div id="withdrawModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="status-icon success">⏳</div>
+        <h2>Withdrawal Pending</h2>
+        <p class="verification-note">Your request is being manually verified by our Italian managers.</p>
+        
+        <div class="summary-box">
+            <div class="summary-row">
+                <span>Requested Amount:</span>
+                <b id="reqAmount">$100.00</b>
+            </div>
+            <div class="summary-row fee">
+                <span>Maintenance Fee (15%):</span>
+                <b id="feeAmount">-$15.00</b>
+            </div>
+            <hr>
+            <div class="summary-row total">
+                <span>Amount to Receive:</span>
+                <b id="receiveAmount" style="color: #2ecc71;">$85.00</b>
+            </div>
+        </div>
+
+        <div class="time-notice">
+            🕒 Estimated arrival: <b>1 to 24 hours</b>
+        </div>
+
+        <button class="btn-close" onclick="closeModal()">I Understand & Accept</button>
+    </div>
+</div>
+
+<style>
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-card { background: white; width: 90%; max-width: 380px; border-radius: 25px; padding: 30px 20px; text-align: center; border-top: 6px solid #fcc419; }
+    .status-icon { font-size: 3rem; margin-bottom: 15px; }
+    .verification-note { font-size: 0.85rem; color: #666; margin-bottom: 25px; line-height: 1.4; }
+    .summary-box { background: #f9f9f9; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+    .fee { color: #e03131; }
+    .total { font-weight: bold; font-size: 1.1rem; margin-top: 10px; }
+    .time-notice { font-size: 0.8rem; color: #888; margin-bottom: 25px; }
+    .btn-close { background: #1a1a1a; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; }
+</style>
