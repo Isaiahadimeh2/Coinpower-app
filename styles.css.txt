@@ -1,0 +1,40 @@
+:root {
+    --gold: #fcc419;
+    --dark-bg: #1a1a1a;
+    --card-bg: #2a2a2a;
+    --text-white: #ffffff;
+}
+
+body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--dark-bg); color: var(--text-white); }
+
+/* Sidebar Styling */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    padding-top: 20px;
+    border-right: 1px solid var(--gold);
+}
+
+.sidebar a {
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #888;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover, .sidebar a.active { color: var(--gold); background: rgba(252, 196, 25, 0.1); }
+
+/* Page Content */
+#main { margin-left: 250px; padding: 20px; }
+
+.page-section { display: none; animation: fadeIn 0.5s; }
+.page-section.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

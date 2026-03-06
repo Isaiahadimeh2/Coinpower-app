@@ -1,0 +1,45 @@
+-- 1. CLEANUP: Clear old policies to prevent Error 42710
+DROP POLICY IF EXISTS "View published generators" ON public.generators;
+DROP POLICY IF EXISTS "Users can view own transactions" ON public.transactions;
+DROP POLICY IF EXISTS "Users can insert own transactions" ON public.transactions;
+
+-- 2. TABLES: Create core tables if they don't exist
+CREATE TABLE IF NOT EXISTS public.generators (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_code TEXT UNIQUE,
+    name TEXT NOT NULL,
+    price DECIMAL(12,2) NOT NULL,
+    daily_income DECIMAL(12,2) DEFAULT 0.00,
+    image_url TEXT,
+    status TEXT DEFAULT 'draft',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.transactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    amount DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+    fee DECIMAL(12,2) DEFAULT 0.00, -- The 15% maintenance tax
+    payment_details TEXT,
+    status TEXT DEFAULT 'pending',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- 3. SECURITY: Enable RLS and set fresh policies
+ALTER TABLE public.generators ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.transactions ENABLE ROW LEVEL SECURITY;
+
+-- Rule: Everyone can see published mining units
+CREATE POLICY "View published generators" 
+ON public.generators FOR SELECT 
+USING (status = 'published');
+
+-- Rule: Users only see their own money history
+CREATE POLICY "Users can view own transactions" 
+ON public.transactions FOR SELECT 
+USING (auth.uid() = user_id);
+
+-- Rule: Users can submit withdrawal requests
+CREATE POLICY "Users can insert own transactions" 
+ON public.transactions FOR INSERT 
+WITH CHECK (auth.uid() = user_id);
