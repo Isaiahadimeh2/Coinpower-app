@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CoinPower | Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --gold: #D4AF37; --green: #28a745; --white: #FFFFFF; }
+        body { font-family: sans-serif; background: var(--white); display: flex; justify-content: center; height: 100vh; align-items: center; margin: 0; }
+        .login-card { width: 320px; padding: 30px; border: 2px solid var(--gold); border-radius: 20px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .login-btn { background: var(--gold); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h1 style="color: var(--gold);">WELCOME BACK</h1>
+    <input type="text" id="login-phone" placeholder="Phone Number (+233...)">
+    <input type="password" id="login-pass" placeholder="Password">
+    <button class="login-btn" onclick="handleLogin()">LOGIN</button>
+    <p style="font-size: 13px; color: gray;">New here? <a href="index.html" style="color: var(--green);">Create Account</a></p>
+</div>
+
+<script>
+    // USE YOUR ACTUAL KEYS HERE
+    const supabase = supabase.createClient('YOUR_URL', 'YOUR_KEY');
+
+    async function handleLogin() {
+        const phone = document.getElementById('login-phone').value;
+        const pass = document.getElementById('login-pass').value;
+
+        const { data, error } = await supabase
+            .from('Coinpower')
+            .select('*')
+            .eq('phone_number', phone)
+            .eq('password', pass)
+            .single();
+
+        if (data) {
+            alert("Login Successful!");
+            localStorage.setItem('userPhone', phone); // Saves your session
+            window.location.href = "dashboard.html";
+        } else {
+            alert("Invalid Phone or Password");
+        }
+    }
+</script>
+
+</body>
+</html>
