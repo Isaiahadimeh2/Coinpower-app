@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CoinPower | Payments</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --gold: #D4AF37; --green: #28a745; --white: #FFFFFF; --gray: #f4f4f4; }
+        body { font-family: sans-serif; background: var(--gray); margin: 0; padding: 20px; text-align: center; }
+        .tab-container { display: flex; background: white; border-radius: 10px; margin-bottom: 20px; overflow: hidden; border: 1px solid var(--gold); }
+        .tab { flex: 1; padding: 15px; cursor: pointer; font-weight: bold; color: var(--gold); }
+        .tab.active { background: var(--gold); color: white; }
+        .form-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        select, input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .btn { background: var(--green); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .payment-info { background: #fffde7; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 10px; border: 1px solid #ffe082; }
+    </style>
+</head>
+<body>
+
+    <div class="tab-container">
+        <div id="tab-dep" class="tab active" onclick="showForm('deposit')">DEPOSIT</div>
+        <div id="tab-with" class="tab" onclick="showForm('withdraw')">WITHDRAW</div>
+    </div>
+
+    <div class="form-card">
+        <h3 id="form-title">Add Funds</h3>
+        
+        <label>Select Country:</label>
+        <select id="country-select" onchange="updateMethods()">
+            <option value="Ghana">Ghana 🇬🇭</option>
+            <option value="Nigeria">Nigeria 🇳🇬</option>
+            <option value="Cote d'Ivoire">Ivory Coast 🇨🇮</option>
+            <option value="Cameroon">Cameroon 🇨🇲</option>
+            <option value="Kenya">Kenya 🇰🇪</option>
+            <option value="South Africa">South Africa 🇿🇦</option>
+            <option value="Uganda">Uganda 🇺🇬</option>
+            <option value="Tanzania">Tanzania 🇹🇿</option>
+            <option value="Senegal">Senegal 🇸🇳</option>
+            <option value="Benin">Benin 🇧🇯</option>
+        </select>
+
+        <label>Payment Method:</label>
+        <select id="method-select">
+            </select>
+
+        <div class="payment-info" id="payment-details">
+            Select a method to see details.
+        </div>
+
+        <input type="number" id="amount" placeholder="Enter Amount ($)">
+        <input type="text" id="reference" placeholder="Transaction ID / Wallet Address">
+        
+        <button class="btn" onclick="submitTransaction()">SUBMIT REQUEST</button>
+    </div>
+
+    <script>
+        let currentMode = 'deposit';
+
+        function updateMethods() {
+            const country = document.getElementById('country-select').value;
+            const methodSelect = document.getElementById('method-select');
+            const info = document.getElementById('payment-details');
+            
+            methodSelect.innerHTML = "";
+            
+            if (country === "Ghana") {
+                const options = ["MTN MoMo", "Telecel Cash", "AT Money (Tigo)", "USDT (TRC20)"];
+                options.forEach(opt => methodSelect.innerHTML += `<option value="${opt}">${opt}</option>`);
+                info.innerHTML = "Ghana MoMo: <b>+233257758007</b> (James Cole)";
+            } else {
+                methodSelect.innerHTML = `<option value="USDT">USDT (TRC20)</option>`;
+                info.innerHTML = "Global USDT Address: <b>TY7xxxxxxxxxxxxxxx</b>";
+            }
+        }
+
+        function showForm(mode) {
+            currentMode = mode;
+            document.getElementById('form-title').innerText = mode === 'deposit' ? 'Add Funds' : 'Withdraw Funds';
+            document.getElementById('tab-dep').className = mode === 'deposit' ? 'tab active' : 'tab';
+            document.getElementById('tab-with').className = mode === 'withdraw' ? 'tab active' : 'tab';
+        }
+
+        async function submitTransaction() {
+            // Your Supabase Insert Logic here
+            alert(currentMode + " request submitted for " + document.getElementById('country-select').value);
+        }
+
+        updateMethods(); // Initial load
+    </script>
+</body>
+</html>
