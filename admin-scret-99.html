@@ -5,24 +5,28 @@
     <title>CoinPower | ADMIN ONLY</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --gold: #D4AF37; --green: #28a745; --red: #dc3545; }
-        body { font-family: sans-serif; background: #222; color: white; padding: 20px; }
-        .admin-card { background: #333; border: 1px solid var(--gold); border-radius: 10px; padding: 15px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #444; padding: 10px; text-align: left; }
-        th { background: #444; color: var(--gold); }
-        .approve-btn { background: var(--green); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .reject-btn { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        :root { --gold: #D4AF37; --green: #28a745; --red: #dc3545; --dark: #121212; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding: 20px; }
+        .admin-card { background: #1e1e1e; border: 1px solid var(--gold); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h1 { color: var(--gold); letter-spacing: 1px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #181818; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: left; }
+        th { background: #2a2a2a; color: var(--gold); }
+        .approve-btn { background: var(--green); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .reject-btn { background: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 5px; }
+        .approve-btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <h1 style="color: var(--gold);">COINPOWER ADMIN SYSTEM</h1>
+    <h1>COINPOWER ADMIN SYSTEM</h1>
     
     <div class="admin-card">
         <h3>Pending Deposits (MoMo)</h3>
-        <p>Check your phone for +233257758007 before clicking Approve!</p>
-        <table id="deposit-table">
+        <p style="color: #888;">Step 1: Verify funds on phone **+233257758007** (James Cole)</p>
+        <p style="color: #888;">Step 2: Match the Reference code before approving.</p>
+        
+        <table>
             <thead>
                 <tr>
                     <th>Phone</th>
@@ -37,25 +41,35 @@
     </div>
 
     <script>
-        const supabase = supabase.createClient('YOUR_URL', 'YOUR_KEY');
+        // Use your specific project URL
+        const supabaseUrl = 'https://xbztonzjtkkcqrrfpyyt.supabase.co';
+        const supabaseKey = 'YOUR_ANON_KEY'; // MUST replace with your actual key from Vercel/Supabase
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         async function loadDeposits() {
-            const { data, error } = await supabase
+            // Loading from 'deposits' table
+            const { data, error } = await _supabase
                 .from('deposits')
                 .select('*')
                 .eq('status', 'pending');
 
+            if (error) {
+                console.error("Error loading deposits:", error);
+                return;
+            }
+
             const container = document.getElementById('deposit-body');
-            container.innerHTML = "";
+            container.innerHTML = data.length === 0 ? "<tr><td colspan='4' style='text-align:center;'>No pending deposits</td></tr>" : "";
 
             data.forEach(dep => {
                 container.innerHTML += `
                     <tr>
                         <td>${dep.phone_number}</td>
                         <td>$${dep.amount}</td>
-                        <td>${dep.reference}</td>
+                        <td><code style="color:var(--gold)">${dep.reference}</code></td>
                         <td>
                             <button class="approve-btn" onclick="approve('${dep.id}', '${dep.phone_number}', ${dep.amount})">APPROVE</button>
+                            <button class="reject-btn" onclick="reject('${dep.id}')">REJECT</button>
                         </td>
                     </tr>
                 `;
@@ -63,17 +77,31 @@
         }
 
         async function approve(id, phone, amount) {
+            if(!confirm(`Confirm adding $${amount} to ${phone}?`)) return;
+
             // 1. Mark deposit as 'completed'
-            await supabase.from('deposits').update({ status: 'completed' }).eq('id', id);
+            await _supabase.from('deposits').update({ status: 'completed' }).eq('id', id);
             
-            // 2. Add the money to the user's balance
-            const { data: user } = await supabase.from('Coinpower').select('balance').eq('phone_number', phone).single();
-            const newBalance = parseFloat(user.balance) + parseFloat(amount);
+            // 2. Fetch current balance from the 'users' table (your master table)
+            const { data: user } = await _supabase.from('users').select('balance').eq('phone_number', phone).single();
             
-            await supabase.from('Coinpower').update({ balance: newBalance }).eq('phone_number', phone);
+            if(user) {
+                const newBalance = parseFloat(user.balance || 0) + parseFloat(amount);
+                // 3. Update the user balance
+                await _supabase.from('users').update({ balance: newBalance }).eq('phone_number', phone);
+                alert("Success: Funds added to user wallet!");
+            } else {
+                alert("Error: User phone number not found in database!");
+            }
             
-            alert("Funds Approved and Added!");
-            loadDeposits(); // Refresh the list
+            loadDeposits();
+        }
+
+        async function reject(id) {
+            if(confirm("Reject this deposit?")) {
+                await _supabase.from('deposits').update({ status: 'rejected' }).eq('id', id);
+                loadDeposits();
+            }
         }
 
         loadDeposits();
