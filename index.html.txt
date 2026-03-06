@@ -1,0 +1,22 @@
+<div id="active-page" class="page-section">
+    <div class="page-header">
+        <h2>⚡ Your Active Miners</h2>
+        <p>Real-time energy production status.</p>
+    </div>
+
+    <div id="miners-container">
+        <div class="miner-card">
+            <div class="miner-info">
+                <span class="miner-name">PG2 - Solar Array</span>
+                <span class="miner-status">Status: Running</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="p1" style="width: 65%;"></div>
+            </div>
+            <div class="miner-stats">
+                <span>Daily: $2.40</span>
+                <span id="timer-1">Time Left: 14h 22m</span>
+            </div>
+        </div>
+    </div>
+</div>
